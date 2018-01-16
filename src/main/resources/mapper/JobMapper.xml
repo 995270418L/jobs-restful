@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.steve.jobsjson.mapper.JobMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.steve.jobsjson.entity.Job">
+        <id column="id" property="id" />
+        <result column="job_id" property="jobId" />
+        <result column="job_name" property="jobName" />
+        <result column="job_salary" property="jobSalary" />
+        <result column="job_place_id" property="jobPlaceId" />
+        <result column="job_exper" property="jobExper" />
+        <result column="job_record" property="jobRecord" />
+        <result column="job_attract" property="jobAttract" />
+        <result column="job_descr" property="jobDescr" />
+        <result column="job_site" property="jobSite" />
+        <result column="job_create_time" property="jobCreateTime" />
+        <result column="com_id" property="comId" />
+    </resultMap>
+
+    <resultMap id="JobCityField" type="com.steve.jobsjson.entity.vm.JobCityField">
+        <result column="job_tag" property="jobTag" />
+        <result column="city_name" property="cityName" />
+        <result column="count_job" property="count" />
+    </resultMap>
+    
+    <resultMap id="JobInfoKeyword" type="com.steve.jobsjson.entity.vm.JobInfoKeyword">
+        <result column="id" property="id" />
+        <result column="job_name" property="jobName" />
+        <result column="job_salary" property="jobSalary" />
+        <result column="city_name" property="cityName" />
+        <result column="job_exper" property="jobExper" />
+        <result column="job_record" property="jobRecord" />
+        <result column="job_attract" property="jobAttract" />
+        <result column="job_descr" property="jobDescr" />
+        <result column="job_site" property="jobSite" />
+        <result column="job_create_time" property="jobCreateTime" />
+        <result column="com_id" property="comId" />
+        <result column="com_name" property="comName" />
+        <result column="com_site" property="comSite" />
+    </resultMap>
+    
+    <select id="statisticalJobCityField" resultMap="JobCityField">
+        select c.city_name as city_name,jt.tag_name as job_tag,count(j.id) as count_job from job j
+            inner join city c on c.city_id = j.job_place_id
+            inner join job_tag_r jtr on jtr.job_id = j.job_id
+            inner join job_tag jt on jt.id = jtr.job_id
+        <where>
+            <if test="tagName != null">
+                jt.tag_name = #{tagName,jdbcType=VARCHAR}
+            </if>
+        </where>
+        group by jt.tag_name
+        order by count(j.id)
+    </select>
+
+    <select id="statisticalJobCityFieldInDescOrName" resultMap="JobCityField">
+        select c.city_name as city_name, count(j.id) from job j
+          inner join city c on c.city_id = j.job_place_id
+          inner join job_tag_r jtr on jtr.job_id = j.job_id
+          inner join job_tag jt on jt.id = jtr.job_id
+        where
+        <if test="cityName != null">
+            c.city_name = #{cityName,jdbcType=VARCHAR} and
+        </if>
+        <bind name="keyword" value="'%'+_parameter.name+'%'"/>
+        jt.tag_name like #{keyword,jdbcType=VARCHAR} and j.job_descr like #{keyword,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectAllJobInfoWithKeyword" resultMap="JobInfoKeyword">
+        select
+            j.id as id, j.job_name as job_name, j.job_salary as job_salary, c.city_name as city_name,
+            j.job_exper as job_exper, j.job_record as job_record, j.job_attract as job_attract, job_descr as job_descr,
+            j.job_site as job_site, j.job_create_time as job_create_time, com.com_id as com_id, com.com_name as com_name, com.com_site as com_site
+        from job j
+            inner join city c on c.city_id = j.job_place_id
+            inner join company com on com.com_id = j.com_id
+            inner join job_tag_r jtr on jtr.job_id = j.job_id
+            inner join job_tag jt on jt.id = jtr.job_id
+        where
+            c.city_name = #{cityName,jdbcType=VARCHAR}
+            <bind name="keyword" value="'%'+_parameter.keyword+'%'" />
+            j.job_name like #{keyword,jdbcType=VARCHAR} and j.job_descr like #{keyword,jdbcType=VARCHAR} and jt.tag_name like #{keyword,jdbcType=VARCHAR}
+        order by j.id
+    </select>
+
+</mapper>

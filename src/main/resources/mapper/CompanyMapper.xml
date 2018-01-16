@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.steve.jobsjson.mapper.CompanyMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.steve.jobsjson.entity.Company">
+        <id column="id" property="id" />
+        <result column="com_id" property="comId" />
+        <result column="com_name" property="comName" />
+        <result column="com_process" property="comProcess" />
+        <result column="com_number" property="comNumber" />
+        <result column="com_city_id" property="comCityId" />
+        <result column="com_num_school" property="comNumSchool" />
+        <result column="com_num_social" property="comNumSocial" />
+        <result column="com_site" property="comSite" />
+        <result column="com_source" property="comSource" />
+        <result column="com_fullname" property="comFullname" />
+        <result column="com_address" property="comAddress" />
+        <result column="com_info" property="comInfo" />
+        <result column="com_record_time" property="comRecordTime" />
+        <result column="com_resume_rate" property="comResumeRate" />
+    </resultMap>
+
+</mapper>

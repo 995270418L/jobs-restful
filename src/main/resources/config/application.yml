@@ -1,0 +1,22 @@
+
+mybatis-plus:
+    mapper-locations: classpath*:mapper/*Mapper.xml
+
+server:
+    port: 1024
+    context-path: /
+
+spring:
+    application:
+        name: steve-jobs
+    datasource:
+        type: com.zaxxer.hikari.HikariDataSource
+        hikari:
+            data-source-properties:
+                cachePrepStmts: true
+                prepStmtCacheSize: 250
+                prepStmtCacheSqlLimit: 2048
+                useServerPrepStmts: true
+        url: jdbc:mysql://localhost:3306/job?useUnicode=true&characterEncoding=utf8&useSSL=false
+        username: root
+        password: shiyue
